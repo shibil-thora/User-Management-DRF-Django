@@ -22,3 +22,25 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Django Backend
+backend/api_app/__pycache__/
+backend/api_app/*.pyc
+backend/api_app/*.pyo
+backend/api_app/*.pyd
+backend/api_app/*.log
+backend/api_app/db.sqlite3
+backend/api_app/media/
+backend/api_app/staticfiles/
+backend/api_app/.env
+backend/api_app/.venv/
+backend/api_app/venv/
+backend/api_app/ENV/
+backend/api_app/env.bak/
+backend/api_app/venv.bak/
+backend/api_app/celerybeat-schedule.*
+backend/api_app/.mypy_cache/
+backend/api_app/__pycache__/
+backend/api_app/*.sage.py
+
+ 
