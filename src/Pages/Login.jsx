@@ -8,9 +8,17 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [errorCommon, setErrorCommon] = useState('')
     const state = useSelector(state => state.auth) ;
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const navigate = useNavigate() 
+
+
+    useEffect(() => {
+      if (state.user && state.user.is_authenticated){ 
+        navigate('/')
+      }
+    }, []);
 
 
     function handleLogin(e) {
@@ -19,11 +27,14 @@ function Login() {
             if(res.status === 200) {
                 localStorage.setItem('access', res.data.access_token)
                 localStorage.setItem('refresh', res.data.refresh_token)
+                if (res.data) {
                 dispatch(changeAuthMode({
                     user: res.data.user,
-                }))
+                }))}
                 navigate('/');
             }
+        }).catch((err) => {
+          setErrorCommon(err.response.data.detail)
         })
         
     }
@@ -61,6 +72,7 @@ function Login() {
               className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               required
             />
+            <p className='text-red-500 mx-auto text-sm'>{errorCommon}</p>
           </div>
           <button
             type="submit"

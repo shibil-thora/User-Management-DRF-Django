@@ -1,7 +1,19 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../Redux/AuthenticationSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
     const [showProfile, setShowProfile] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    function handleLogout(e) {
+        e.preventDefault();
+        dispatch(logOut());
+        navigate('/login')
+    }
+
   return (
     <nav className="bg-gradient-to-r from-violet-800 to-red-600">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +51,9 @@ function Navbar() {
             {/* Active: "bg-gray-100", Not Active: "" */}
             <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</a>
             <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</a>
+            <a href="#" 
+            onClick={(e) => handleLogout(e)}
+            className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</a>
           </div> }
         </div>
       </div>

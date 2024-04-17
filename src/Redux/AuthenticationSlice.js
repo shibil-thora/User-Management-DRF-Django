@@ -11,9 +11,14 @@ export const AuthenticationSlice = createSlice({
         changeAuthMode: (state, action) => {
             state.user = action.payload.user;
         },
+        logOut: (state, action) => {
+            state.user = {}
+            localStorage.setItem('access', ''); 
+            localStorage.setItem('refresh', ''); 
+        }
     }
 })
 
 
-export const {changeAuthMode} = AuthenticationSlice.actions 
+export const {changeAuthMode, logOut} = AuthenticationSlice.actions 
 export default AuthenticationSlice.reducer
