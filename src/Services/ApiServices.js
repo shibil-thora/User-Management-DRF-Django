@@ -38,6 +38,12 @@ export function editUser(user) {
     })
 } 
 
+export function getQueryUserSet(query) {
+    return axios.post(`${host}/search/`, {access: localStorage.getItem('access'), query}).then((res) => {
+        return res
+    })
+}
+
 export function postImage(image) {
     const formData = new FormData();
     formData.append('image', image)

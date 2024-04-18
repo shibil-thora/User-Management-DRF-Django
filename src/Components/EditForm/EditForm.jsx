@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 function EditForm(props) {
+  const [errorCommon, setEditErrorCommon] = useState('')
 
     function handleEditSubmit(e) {
         e.preventDefault()
-        props.handleEditSubmit()
+        props.handleEditSubmit(setEditErrorCommon)
     }
 
   return (
@@ -30,6 +31,8 @@ function EditForm(props) {
             className="px-3 py-2 rounded-md border focus:outline-none focus:ring focus:ring-violet-500"
           />
         </div>
+        <p></p>
+        <p className='text-red-500 my-3 mb-0 mx-auto text-sm'>{errorCommon}</p>
         <button
           type="submit"
           className="px-4 py-2 my-6 text-sm bg-white font-medium text-violet-800 hover:bg-violet-700 hover:text-white rounded-md focus:outline-none focus:ring focus:ring-violet-300"

@@ -60,7 +60,7 @@ function Navbar() {
             onClick={() => setShowProfile(!showProfile)}
             className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
               <span className="absolute -inset-1.5"></span>
-              <span className="sr-only">Open user menu</span>
+              <span className="sr-only">Open user menu</span>  
               <img className="h-8 w-8 rounded-full" src={state.profileImage ? `${host}${state.profileImage}` : 'https://png.pngitem.com/pimgs/s/146-1468281_profile-icon-png-transparent-profile-picture-icon-png.png'} alt="" />
             </button>
           </div>
@@ -68,17 +68,17 @@ function Navbar() {
           {showProfile &&
         <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
         <div className="flex flex-col items-center space-y-2 px-4 py-4">
+          <h2><b>{state.user.username}</b></h2>
           <img className="w-500 h-500 rounded-full object-cover mx-auto" src={state.profileImage ? `${host}${state.profileImage}` : 'https://png.pngitem.com/pimgs/s/146-1468281_profile-icon-png-transparent-profile-picture-icon.png'} alt="Profile Picture" />
           <div className="text-center">
 
             <div className="flex items-center space-x-2">
             <label htmlFor="image-upload" className="inline-block px-4 py-2 rounded-md text-center text-sm font-medium text-gray-700 bg-red-200 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
                <h1 style={{fontSize: '30px'}} className='mb-3'>📷</h1>
-               <p> Upload Image </p>
+               <p> {state.profileImage ? 'Change Image' : 'Upload Image'} </p>
             </label>
             <input type="file" id="image-upload" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e)} />
           </div>
-
 
 
           </div>

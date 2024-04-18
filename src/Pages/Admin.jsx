@@ -8,6 +8,7 @@ import { getUserSet, deleteUser } from '../Services/ApiServices'
 import { editUser, AddUser } from '../Services/ApiServices'
 import EditForm from '../Components/EditForm/EditForm'
 import AddForm from '../Components/AddForm/AddForm'
+import { getQueryUserSet } from '../Services/ApiServices'
 
 function Admin() {
   const state = useSelector(state => state.auth)
@@ -16,6 +17,7 @@ function Admin() {
   const [editData, setEditData] = useState({id: null, username: '', email: ''})
   const [showEditForm, setShowEditForm] = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     if (!state.user || !state.user.is_superuser){
@@ -28,7 +30,13 @@ function Admin() {
     getUserSet().then((res) => {
       setUsers(res.data.users)
     })
-  }, [])
+  }, []) 
+
+  useEffect(() => {
+    getQueryUserSet(query).then((res) => {
+      setUsers(res.data.users)
+    })
+  }, [query])
 
   function handleDeleteUser(id) {
     deleteUser(id).then((res) => {
@@ -38,15 +46,17 @@ function Admin() {
     })
   }
 
-  function handleEditSubmit() {
-    setShowEditForm(false)
+  function handleEditSubmit(setEditErrorCommon) {
     editUser(editData).then((res) => {
       if(res.status == 200) {
         const new_users = [...users] ;
         const edit_index = new_users.findIndex(user => user.id === editData.id) ;
         new_users[edit_index] = editData ;
         setUsers(new_users);
+        setShowEditForm(false)
       }
+    }).catch((err) => {
+      setEditErrorCommon(err.response.data.detail)
     })
   }
 
@@ -66,6 +76,13 @@ function Admin() {
   return (
     <>
     <Navbar />
+    <div className="flex items-center rounded-md bg-gray-100/20 px-3 mx-10 py-2 focus:outline-none">   
+    🔍
+    <input type="text" 
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    className="w-full bg-transparent text-gray-700 focus:outline-none focus:text-gray-900 placeholder-gray-400 focus:placeholder-transparent" placeholder="Search..." />
+    </div>
     <UserTable 
     users={users} 
     setEditData={setEditData}
