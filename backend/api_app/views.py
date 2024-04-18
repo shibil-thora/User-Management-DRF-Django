@@ -42,6 +42,25 @@ class UserSetView(APIView):
         return Response({}, status=status.HTTP_403_FORBIDDEN)
     
 
+class SearchView(APIView):
+    def post(self, request): 
+        decoded_token = AccessToken(request.data['access'])
+        user_id = decoded_token['user_id']
+        user = User.objects.get(id=user_id) 
+        query = request.data.get('query')
+        
+        users_obj = User.objects.all().filter(is_superuser=False)
+        users_obj = users_obj.filter(username__icontains=query)
+        user_set = UserSerializer(users_obj, many=True)
+
+        if user.is_superuser:
+            response_data = {
+                'users': user_set.data
+            }
+            return Response(response_data) 
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
+    
+
 class DeleteUserview(APIView): 
     def post(self, request): 
         decoded_token = AccessToken(request.data['access'])
@@ -62,10 +81,32 @@ class EditUserview(APIView):
         user_id = decoded_token['user_id']
         user = User.objects.get(id=user_id) 
 
+        username = edit_user_dict.get('username')
+        email = edit_user_dict.get('email')
+  
+        
+        if User.objects.exclude(id=edit_user_dict.get('id')).filter(username=username): 
+            raise AuthenticationFailed('username already exists') 
+        
+        if User.objects.exclude(id=edit_user_dict.get('id')).filter(email=email):
+            raise AuthenticationFailed('email already exists') 
+        
+        if len(username.strip()) < 4:  
+            raise AuthenticationFailed('username is short')
+        
+        if str(username).isdigit(): 
+            raise AuthenticationFailed('invalid username') 
+        
+        try: 
+            EmailValidator()(email)
+        except: 
+            raise AuthenticationFailed('Enter a valid Email') 
+        
+
         if user.is_superuser: 
             edit_user = User.objects.get(id=edit_user_dict['id']) 
-            edit_user.username = edit_user_dict.get('username')
-            edit_user.email = edit_user_dict.get('email')
+            edit_user.username = username
+            edit_user.email = email
             edit_user.save()
             return Response({'action': 'edited'}) 
         return Response({}, status=status.HTTP_403_FORBIDDEN)
