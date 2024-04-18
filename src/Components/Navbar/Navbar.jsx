@@ -1,17 +1,31 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { logOut } from '../../Redux/AuthenticationSlice';
+import { logOut, updateImageURL } from '../../Redux/AuthenticationSlice';
 import { useNavigate } from 'react-router-dom';
+import { host } from '../../Services/ApiServices';
+import { useSelector } from 'react-redux';
+import { postImage } from '../../Services/ApiServices';
 
 function Navbar() {
     const [showProfile, setShowProfile] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const state = useSelector(state => state.auth)
+    const [image, setImage] = useState(null)
+    const [imageURL, setImageURL] = useState(null)
 
     function handleLogout(e) {
         e.preventDefault();
         dispatch(logOut());
         navigate('/login')
+    }
+
+    function handleImageUpload(e) {
+      setImage(e.target.files[0]);
+      setImageURL(URL.createObjectURL(e.target.files[0]))
+      postImage(e.target.files[0]).then((res) => {
+        dispatch(updateImageURL(res.data.new_image_url));
+      })
     }
 
   return (
@@ -24,7 +38,12 @@ function Navbar() {
         </div>
         <div className="hidden md:block">
           <div className="ml-10 flex items-baseline space-x-4">
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Home</a>
+            <a href="#" 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
+            }}
+            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Home</a>
             <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Groups</a>
             <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
             <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">About</a>
@@ -42,19 +61,35 @@ function Navbar() {
             className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
               <span className="absolute -inset-1.5"></span>
               <span className="sr-only">Open user menu</span>
-              <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+              <img className="h-8 w-8 rounded-full" src={state.profileImage ? `${host}${state.profileImage}` : 'https://png.pngitem.com/pimgs/s/146-1468281_profile-icon-png-transparent-profile-picture-icon-png.png'} alt="" />
             </button>
           </div>
 
           {showProfile &&
-          <div onMouseLeave={() => setShowProfile(false)} className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
-            {/* Active: "bg-gray-100", Not Active: "" */}
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" 
-            onClick={(e) => handleLogout(e)}
-            className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</a>
-          </div> }
+        <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
+        <div className="flex flex-col items-center space-y-2 px-4 py-4">
+          <img className="w-500 h-500 rounded-full object-cover mx-auto" src={state.profileImage ? `${host}${state.profileImage}` : 'https://png.pngitem.com/pimgs/s/146-1468281_profile-icon-png-transparent-profile-picture-icon.png'} alt="Profile Picture" />
+          <div className="text-center">
+
+            <div className="flex items-center space-x-2">
+            <label htmlFor="image-upload" className="inline-block px-4 py-2 rounded-md text-center text-sm font-medium text-gray-700 bg-red-200 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
+               <h1 style={{fontSize: '30px'}} className='mb-3'>📷</h1>
+               <p> Upload Image </p>
+            </label>
+            <input type="file" id="image-upload" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e)} />
+          </div>
+
+
+
+          </div>
+          <a href="#" onClick={(e) => handleLogout(e)} className="inline-flex items-center px-2.5 py-1.5 text-sm font-medium text-center text-red-600 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+             <p>⚓</p> &nbsp;
+            Sign Out
+          </a>
+        </div>
+      </div>
+      
+             }
         </div>
       </div>
     </div>

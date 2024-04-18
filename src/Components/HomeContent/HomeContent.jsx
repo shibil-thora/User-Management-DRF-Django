@@ -30,7 +30,7 @@ function HomeContent(props) {
       onClick={() => {navigate('/admin')}}
       className="mt-8 px-4 py-2 bg-white text-violet-800 font-bold rounded-md shadow-sm hover:bg-indigo-100 hover:text-pink-800"
     >
-      DashBoard
+      DashBoard 📒
     </button>
     }
   </div>

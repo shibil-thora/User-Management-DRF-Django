@@ -4,7 +4,6 @@ import axios from "axios";
 
 export function isLoggedUser() {
     return axios.post(`${host}`, {access: localStorage.getItem('access')}).then((res) => {
-        console.log(res.status, 'now purpose')
         return res.status
     }).catch((err) => {
         const refreshTokon = localStorage.getItem('refresh') ;

@@ -28,8 +28,10 @@ function Login() {
                 localStorage.setItem('access', res.data.access_token)
                 localStorage.setItem('refresh', res.data.refresh_token)
                 if (res.data) {
+                  console.log(res.data.profile_image_url)
                 dispatch(changeAuthMode({
                     user: res.data.user,
+                    profile_image_url: res.data.profile_image_url,
                 }))}
                 navigate('/');
             }
@@ -37,6 +39,11 @@ function Login() {
           setErrorCommon(err.response.data.detail)
         })
         
+    }
+
+    function handleGoToSignUp(e) {
+        e.preventDefault()
+        navigate('/signup')
     }
 
   return (
@@ -81,7 +88,12 @@ function Login() {
             Login
           </button>
         </form>
+        
       </div>
+      <p> 
+      Dont have an account ?  &nbsp;
+      <a href="" onClick={(e) => handleGoToSignUp(e)} className='text-white shadow underline'>signUP</a>
+      </p>
     </div>
   );
 }
