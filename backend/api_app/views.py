@@ -102,7 +102,6 @@ class EditUserview(APIView):
         except: 
             raise AuthenticationFailed('Enter a valid Email') 
         
-
         if user.is_superuser: 
             edit_user = User.objects.get(id=edit_user_dict['id']) 
             edit_user.username = username
@@ -200,6 +199,7 @@ class AddUserView(APIView):
         
         if str(username).isdigit(): 
             raise AuthenticationFailed('invalid username') 
+        
         
         try: 
             EmailValidator()(email)
