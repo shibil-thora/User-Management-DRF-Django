@@ -10,5 +10,4 @@ urlpatterns = [
     path('edit_user/', views.EditUserview.as_view()),
     path('add_user/', views.AddUserView.as_view()),
     path('update_profile_image/', views.UploadProfileImage.as_view()),
-    path('search/', views.SearchView.as_view()),
 ]

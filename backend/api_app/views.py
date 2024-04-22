@@ -42,25 +42,6 @@ class UserSetView(APIView):
         return Response({}, status=status.HTTP_403_FORBIDDEN)
     
 
-class SearchView(APIView):
-    def post(self, request): 
-        decoded_token = AccessToken(request.data['access'])
-        user_id = decoded_token['user_id']
-        user = User.objects.get(id=user_id) 
-        query = request.data.get('query')
-        
-        users_obj = User.objects.all().filter(is_superuser=False)
-        users_obj = users_obj.filter(username__icontains=query)
-        user_set = UserSerializer(users_obj, many=True)
-
-        if user.is_superuser:
-            response_data = {
-                'users': user_set.data
-            }
-            return Response(response_data) 
-        return Response({}, status=status.HTTP_403_FORBIDDEN)
-    
-
 class DeleteUserview(APIView): 
     def post(self, request): 
         decoded_token = AccessToken(request.data['access'])

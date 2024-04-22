@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
+
 
 function UserTable(props) {
+  const [query, setQuery] = useState('')
 
     function handleEditClick(user) {
         props.setEditData({
@@ -11,7 +13,16 @@ function UserTable(props) {
         props.setShowEditForm(true);
     }
   return (
+    <>
+    <div className="flex items-center rounded-md bg-gray-100/20 px-3 mx-10 py-2 focus:outline-none">   
+    🔍
+    <input type="text" 
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    className="w-full bg-transparent text-gray-700 focus:outline-none focus:text-gray-900 placeholder-gray-400 focus:placeholder-transparent" placeholder="Search..." />
+    </div>
     <div className="overflow-x-auto rounded-lg border shadow-xl mt-4 mx-10">
+      
     <table className="w-full border-collapse">
       <thead>
         <tr className="bg-gray-200 text-left text-xs font-medium">
@@ -22,7 +33,7 @@ function UserTable(props) {
         </tr>
       </thead>
       <tbody>
-        {props.users.map((user) => (
+        {props.users.filter((user => user.username.includes(query))).map((user) => (
           <tr key={user.id} className="border-b hover:bg-violet-800">
             <td className="px-4 py-4 text-sm">{user.username}</td>
             <td className="px-4 py-4 text-sm">{user.email}</td>
@@ -47,6 +58,7 @@ function UserTable(props) {
       </tbody>
     </table>
   </div>
+  </>
   )
 }
 
